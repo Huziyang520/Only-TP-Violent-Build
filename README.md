@@ -18,6 +18,8 @@ ini
     enabled = true
     #Blacklist - players in this list are exempt from restrictions. Format: ["player1", "player2"]
     blacklist = []
+
+
 配置项	说明
 enabled	设为 false 可完全禁用本模组（默认 true）。
 blacklist	黑名单中的玩家名可豁免所有限制。写法示例：["player1", "player2"]。
