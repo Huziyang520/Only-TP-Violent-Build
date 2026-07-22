@@ -1,0 +1,48 @@
+﻿Reusing configuration cache.
+> Task :jarJar NO-SOURCE
+> Task :processTestResources NO-SOURCE
+> Task :generateModMetadata UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :createMinecraftArtifacts UP-TO-DATE
+
+> Task :compileJava
+.\gradlew.bat : D:\娴忚鍣╘Mymods\Only TP Violent Build\Neo26.1.2\src\main\java\co
+m\huziyang520\onlytpviolentbuild\OnlyTPViolentBuild.java:56: 閿欒: 涓嶅吋瀹圭殑绫诲瀷: St
+ring鏃犳硶杞崲涓篣UID
+所在位置 行:1 字符: 5
++ & { .\gradlew.bat build 2>&1 | Out-File -FilePath build_log.txt -Enco ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (D:\娴忚鍣╘Mymods\...ring鏃犳硶杞崲涓篣UID 
+   :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+        NameAndId nameAndId = new NameAndId(player.getGameProfile().name(), pla
+yer.getGameProfile().id());
+                                                                        ^
+娉? 鏌愪簺娑堟伅宸茬粡杩囩畝鍖? 璇蜂娇鐢?-Xdiags:verbose 閲嶆柊缂栬瘧浠ヨ幏寰楀畬鏁磋緭鍑?
+1 涓敊璇?
+
+> Task :compileJava FAILED
+
+[Incubating] Problems report is available at: file:///D:/%E6%B5%8F%E8%A7%88%E5%99%A8/Mymods/Only%20TP%20Violent%20Build/Neo26.1.2/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':compileJava'.
+> Compilation failed; see the compiler output below.
+  D:\娴忚鍣╘Mymods\Only TP Violent Build\Neo26.1.2\src\main\java\com\huziyang520\
+onlytpviolentbuild\OnlyTPViolentBuild.java:56: 閿欒: 涓嶅吋瀹圭殑绫诲瀷: String鏃犳硶杞崲涓篣UI
+D
+          NameAndId nameAndId = new NameAndId(player.getGameProfile().name(), p
+layer.getGameProfile().id());
+                                                                          ^
+  1 涓敊璇?
+
+* Try:
+> Check your code and dependencies to fix the compilation error(s)
+> Run with --scan to generate a Build Scan (powered by Develocity).
+
+BUILD FAILED in 14s
+4 actionable tasks: 1 executed, 3 up-to-date
+Configuration cache entry reused.
