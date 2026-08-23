@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "onlytpviolentbuild",
+  "version": "${version}",
+  "name": "Only TP Violent Build",
+  "description": "Restricts OP players to teleport-only commands on the server.",
+  "authors": [
+    "huziyang520"
+  ],
+  "contact": {
+    "issues": "https://github.com/Huziyang520/Only-TP-Violent-Build/issues",
+    "sources": "https://github.com/Huziyang520/Only-TP-Violent-Build"
+  },
+  "icon": "assets/onlytpviolentbuild/icon.png",
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.huziyang520.onlytpviolentbuild.OnlyTPViolentBuild"
+    ],
+    "client": [
+      "com.huziyang520.onlytpviolentbuild.client.OnlyTPViolentBuildClient"
+    ]
+  },
+  "mixins": [
+    "onlytpviolentbuild.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": ">=1.21.1"
+  }
+}
