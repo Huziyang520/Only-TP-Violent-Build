@@ -1,0 +1,34 @@
+{
+    "schemaVersion": 1,
+    "id": "onlytpviolentbuild",
+    "version": "${version}",
+    "name": "${mod_name}",
+    "description": "${description}\n\nBUG反馈: https://issue.mengcai.online/",
+    "authors": [
+        "${mod_author}"
+    ],
+    "contact": {
+        "issues": "https://issue.mengcai.online/",
+        "sources": "https://www.curseforge.com/minecraft/mc-mods/only-tp-violent-build"
+    },
+    "license": "${license}",
+    "icon": "assets/onlytpviolentbuild/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "com.huziyang520.onlytpviolentbuild.OnlyTPViolentBuild"
+        ],
+        "client": [
+            "com.huziyang520.onlytpviolentbuild.client.OnlyTPViolentBuildClient"
+        ]
+    },
+    "mixins": [
+        "${mod_id}.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=0.15",
+        "fabric": "*",
+        "minecraft": "${minecraft_version}",
+        "java": ">=17"
+    }
+}

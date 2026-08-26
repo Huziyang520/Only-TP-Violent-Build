@@ -1,0 +1,4 @@
+{
+  "onlytpviolentbuild.command_blocked": "§c该命令已被禁止！",
+  "onlytpviolentbuild.notification": "Only TP Violent Build：Only TP/AuthCmd加上AvalonBase（UI支持），可提供更完整的功能。本模组需要修改配置文件进行配置，该提示可在配置文件中关闭。"
+}
