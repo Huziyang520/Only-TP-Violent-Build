@@ -1,0 +1,61 @@
+pluginManagement {
+    repositories {
+        // 国内镜像优先：阿里云 Gradle 插件仓库（替代 gradlePluginPortal）
+        maven {
+            name = 'Aliyun Gradle Plugin'
+            url = uri('https://maven.aliyun.com/repository/gradle-plugin')
+        }
+        // 国内镜像优先：阿里云公共仓库（替代 mavenCentral）
+        maven {
+            name = 'Aliyun Public'
+            url = uri('https://maven.aliyun.com/repository/public')
+        }
+        gradlePluginPortal()
+        mavenCentral()
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'Fabric'
+                    url = uri('https://maven.fabricmc.net')
+                }
+            }
+            filter {
+                includeGroup('net.fabricmc')
+                includeGroup('fabric-loom')
+            }
+        }
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'Sponge'
+                    url = uri('https://repo.spongepowered.org/repository/maven-public')
+                }
+            }
+            filter {
+                includeGroupAndSubgroups("org.spongepowered")
+            }
+        }
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'Forge'
+                    url = uri('https://maven.minecraftforge.net')
+                }
+            }
+            filter {
+                includeGroupAndSubgroups('net.minecraftforge')
+            }
+        }
+    }
+}
+
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
+}
+
+// This should match the folder name of the project, or else IDEA may complain (see https://youtrack.jetbrains.com/issue/IDEA-317606)
+rootProject.name = 'MultiLoader-Template'
+include('common')
+include('fabric')
+include('neoforge')
+include('forge')
