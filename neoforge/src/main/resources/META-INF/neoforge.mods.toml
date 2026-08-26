@@ -1,0 +1,21 @@
+modLoader="javafml"
+loaderVersion="${neoforge_loader_version_range}"
+license="${license}"
+showAsResourcePack=false
+[[mods]]
+modId="${mod_id}"
+version="${version}"
+displayName="${mod_name}"
+authors="${mod_author}"
+description='Restricts OP players to teleport-only commands on the server. BUG反馈: https://issue.mengcai.online/'
+logoFile="assets/onlytpviolentbuild/icon.png"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/only-tp-violent-build"
+issueTrackerURL="https://issue.mengcai.online/"
+[[mixins]]
+config="${mod_id}.mixins.json"
+[[dependencies.${mod_id}]]
+modId="neoforge"
+type="required"
+versionRange="${minecraft_version_range}"
+ordering="NONE"
+side="BOTH"
