@@ -1,0 +1,14 @@
+plugins {
+    id 'fabric-loom' version '1.9-SNAPSHOT' apply(false)
+    id 'net.minecraftforge.gradle' version '[6.0.24,6.2)' apply(false)
+}
+
+// The javadoc/javadocJar tasks are not required for publishing mod jars and can
+// fail on paths containing non-ASCII characters. Disable them to keep the build green.
+gradle.projectsEvaluated {
+    subprojects.each { p ->
+        p.tasks.configureEach {
+            if (it.name.toLowerCase().contains('javadoc')) it.enabled = false
+        }
+    }
+}
