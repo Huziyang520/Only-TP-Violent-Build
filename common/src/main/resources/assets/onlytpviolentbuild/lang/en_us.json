@@ -1,0 +1,4 @@
+{
+  "onlytpviolentbuild.command_blocked": "That command is forbidden!",
+  "onlytpviolentbuild.notification": "Only TP Violent Build: Only TP/AuthCmd plus AvalonBase (UI support) provides more complete features. This mod requires modifying the config file for configuration, and this prompt can be turned off in the config file."
+}
