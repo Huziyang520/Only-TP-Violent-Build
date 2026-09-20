@@ -1,0 +1,17 @@
+[
+  {
+    "modid": "onlytpviolentbuild",
+    "name": "Only TP Violent Build",
+    "description": "[EN] Restricts OP players to teleport-only commands on the server. | [CN] 限制服务端 OP 玩家只能使用传送（TP）相关指令。反馈：https://github.com/Huziyang520/Only-TP-Violent-Build/issues | https://issue.mengcai.online/",
+    "version": "1.2.0fix2",
+    "mcversion": "1.7.10",
+    "url": "https://www.curseforge.com/minecraft/mc-mods/only-tp-violent-build",
+    "updateUrl": "",
+    "authorList": ["huziyang520"],
+    "credits": "huziyang520",
+    "logoFile": "icon.png",
+    "screenshots": [],
+    "parent": "",
+    "useDependencyInformation": true
+  }
+]
