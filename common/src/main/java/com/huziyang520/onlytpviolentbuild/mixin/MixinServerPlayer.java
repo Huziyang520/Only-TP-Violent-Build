@@ -2,7 +2,7 @@ package com.huziyang520.onlytpviolentbuild.mixin;
 
 import com.huziyang520.onlytpviolentbuild.CommandGuard;
 import com.huziyang520.onlytpviolentbuild.Constants;
-import net.minecraft.network.chat.Component;
+import com.huziyang520.onlytpviolentbuild.util.ModMsg;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.GameType;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +19,7 @@ public class MixinServerPlayer {
             return;
         }
         Constants.LOG.info("Blocked gamemode change for {}", player.getName().getString());
-        player.sendSystemMessage(Component.translatable("onlytpviolentbuild.command_blocked"));
+        player.sendSystemMessage(ModMsg.blocked(player));
         cir.setReturnValue(false);
         cir.cancel();
     }

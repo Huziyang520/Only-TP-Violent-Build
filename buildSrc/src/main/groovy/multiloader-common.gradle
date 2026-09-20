@@ -4,7 +4,24 @@ plugins {
 }
 
 base {
-    archivesName = "${mod_id}-${project.name}-${minecraft_version}"
+    // jar 文件名 = <mod_id>-<version>-<loader>-<MC 区间>（发布文档 §2.2）
+    def mcLabel = project.findProperty('mc_range_label') ?: minecraft_version
+    archivesName = "${mod_id}-${version}-${project.name}-${mcLabel}"
+}
+
+// Gradle 默认会在 archivesName 后再追加 -<version>；版本已含在 archivesName 里，
+// 清空 archiveVersion 避免双版本号。Loom 的 remapJar 是 AbstractArchiveTask（非 Jar），必须一并覆盖。
+tasks.withType(Jar).configureEach {
+    archiveVersion = ""
+}
+tasks.withType(AbstractArchiveTask).configureEach {
+    archiveVersion = ""
+}
+
+// Java 21 的 javadoc 默认开启 doclint 严格校验，缺 @param/@return 即判错并拖垮构建。
+tasks.withType(Javadoc).configureEach {
+    options.encoding = 'UTF-8'
+    options.addStringOption('Xdoclint:none', '-quiet')
 }
 
 java {

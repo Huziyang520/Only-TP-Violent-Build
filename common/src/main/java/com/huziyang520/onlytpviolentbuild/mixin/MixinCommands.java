@@ -2,11 +2,11 @@ package com.huziyang520.onlytpviolentbuild.mixin;
 
 import com.huziyang520.onlytpviolentbuild.CommandGuard;
 import com.huziyang520.onlytpviolentbuild.Constants;
+import com.huziyang520.onlytpviolentbuild.util.ModMsg;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.context.ParsedCommandNode;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,7 +28,7 @@ public class MixinCommands {
             return;
         }
         Constants.LOG.info("Blocked command \"{}\" from {}", root, player.getName().getString());
-        player.sendSystemMessage(Component.translatable("onlytpviolentbuild.command_blocked"));
+        player.sendSystemMessage(ModMsg.blocked(player));
         ci.cancel();
     }
 

@@ -3,9 +3,9 @@ plugins {
     id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
     id 'org.spongepowered.mixin' version '0.7-SNAPSHOT'
 }
-base {
-    archivesName = "${mod_name}-forge-${minecraft_version}"
-}
+// 归档名交给 buildSrc 里的 multiloader-common 统一处理
+// （<mod_id>-<version>-<loader>-<MC 区间>），此处不得再覆盖，
+// 否则会产出一个非规范名（曾出现 "Only TP Violent Build-forge-1.21.1.jar"）。
 mixin {
     config("${mod_id}.mixins.json")
 }
