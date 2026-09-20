@@ -2,24 +2,37 @@ modLoader="javafml"
 loaderVersion="${forge_loader_version_range}"
 license="${license}"
 showAsResourcePack=false
+
 [[mods]]
 modId="${mod_id}"
 version="${version}"
 displayName="${mod_name}"
-authors="${mod_author}"
-description="${description} BUG反馈: https://issue.mengcai.online/"
-logoFile="icon.png"
+# displayURL / issueTrackerURL 必须写在 [[mods]] 子表内；写在顶层会被静默忽略
 displayURL="https://www.curseforge.com/minecraft/mc-mods/only-tp-violent-build"
-issueTrackerURL="https://issue.mengcai.online/"
+issueTrackerURL="https://github.com/Huziyang520/Only-TP-Violent-Build/issues"
+# 1.18.x 例外：该版本 Forge 的 logoFile **不能含 "/"**，必须是 jar 根的裸文件名，
+# 否则点开模组详情页直接崩（已按"根文件名 icon.png"处理，文件放在 common 资源根）。
+logoFile="icon.png"
+authors="${mod_author}"
+credits="${credits}"
+description='''
+[EN] Restricts OP players to teleport-only commands on the server. Issues: https://github.com/Huziyang520/Only-TP-Violent-Build/issues | https://issue.mengcai.online/
+[CN] 限制服务端 OP 玩家只能使用传送（TP）相关指令。反馈：https://github.com/Huziyang520/Only-TP-Violent-Build/issues | https://issue.mengcai.online/
+'''
+
+# Mixin 必须显式声明，否则 common 里的共享 mixin 全部静默跳过
 [[mixins]]
 config="${mod_id}.mixins.json"
+
 [[dependencies.${mod_id}]]
 modId="forge"
 type="required"
-versionRange="${forge_loader_version_range}"
+# 覆盖 1.18~1.18.2，Forge 对 1.18 = 38.x ⇒ 下界取 38
+versionRange="[38,)"
 ordering="NONE"
 side="BOTH"
 mandatory=true
+
 [[dependencies.${mod_id}]]
 modId="minecraft"
 type="required"

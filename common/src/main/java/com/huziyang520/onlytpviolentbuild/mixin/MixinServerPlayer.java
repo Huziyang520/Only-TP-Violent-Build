@@ -2,7 +2,7 @@ package com.huziyang520.onlytpviolentbuild.mixin;
 
 import com.huziyang520.onlytpviolentbuild.CommandGuard;
 import com.huziyang520.onlytpviolentbuild.Constants;
-import net.minecraft.network.chat.Component;
+import com.huziyang520.onlytpviolentbuild.util.ModMsg;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.GameType;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +19,8 @@ public class MixinServerPlayer {
             return;
         }
         Constants.LOG.info("Blocked gamemode change for {}", player.getName().getString());
-        player.sendMessage(new net.minecraft.network.chat.TranslatableComponent("onlytpviolentbuild.command_blocked"), player.getUUID());
+        // 1.18.2 的发送签名是 sendMessage(Component, UUID)
+        player.sendMessage(ModMsg.blocked(player), player.getUUID());
         cir.setReturnValue(false);
         cir.cancel();
     }
