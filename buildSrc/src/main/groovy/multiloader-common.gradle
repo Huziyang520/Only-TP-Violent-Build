@@ -4,7 +4,29 @@ plugins {
 }
 
 base {
-    archivesName = "${mod_id}-${project.name}-${minecraft_version}"
+    // jar 文件名 = <mod_id>-<version>-<loader>-<MC 区间>（发布文档 §2.2）
+    def mcLabel = project.findProperty('mc_range_label') ?: minecraft_version
+    archivesName = "${mod_id}-${version}-${project.name}-${mcLabel}"
+}
+
+// Gradle 默认会在 archivesName 后再追加 -<version>；版本已含在 archivesName 里，
+// 清空 archiveVersion 避免双版本号。Loom 的 remapJar 是 AbstractArchiveTask（非 Jar），必须一并覆盖。
+tasks.withType(Jar).configureEach {
+    archiveVersion = ""
+}
+tasks.withType(AbstractArchiveTask).configureEach {
+    archiveVersion = ""
+}
+
+// javadoc 默认开启 doclint 严格校验，缺 @param/@return 即判错并拖垮构建。
+tasks.withType(Javadoc).configureEach {
+    options.encoding = 'UTF-8'
+    options.addStringOption('Xdoclint:none', '-quiet')
+}
+
+// Windows 默认平台编码是 GBK，源码里的中文注释会被读坏并报"不可映射字符" ⇒ 显式指定 UTF-8。
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
 }
 
 java {
@@ -93,6 +115,8 @@ jar {
 }
 
 processResources {
+    // Gradle 过滤模板默认用平台编码（Windows=GBK），会把模板里的中文读坏 ⇒ 显式 UTF-8
+    filteringCharset = 'UTF-8'
     var expandProps = [
             'version'                      : version,
             'group'                        : project.group, //Else we target the task's group.

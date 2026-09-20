@@ -1,4 +1,4 @@
 {
-  "onlytpviolentbuild.command_blocked": "§cCette commande est interdite !",
+  "onlytpviolentbuild.command_blocked": "Cette commande est interdite !",
   "onlytpviolentbuild.notification": "Only TP Violent Build : Only TP/AuthCmd avec AvalonBase (prise en charge de l'interface) offre des fonctionnalités plus complètes. Ce mod se configure en modifiant son fichier de configuration, et cette notification peut être désactivée dans le fichier de configuration."
 }
