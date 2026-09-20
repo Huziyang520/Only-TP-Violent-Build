@@ -1,0 +1,88 @@
+// 1.16.x（目标 1.16.5）单模块 Forge 工程
+// 实测：1.16.5 的可用组合只有 FG 3.0 + Gradle 5.6.4 + JDK 8
+// （FG 4.1 硬拒 Java 17；FG 5.1 在 1.16.5 上不产出映射包；FG 3 不支持 Gradle 6+）
+// 映射：channel 'official' 在 FG 3 里 = MCP 官方通道（不是 Mojang），所以类名是 net.minecraft.command.* / ServerPlayerEntity
+buildscript {
+    repositories {
+        maven { name = 'Aliyun Public'; url = 'https://maven.aliyun.com/repository/public' }
+        maven { name = 'Forge'; url = 'https://maven.minecraftforge.net/' }
+        maven { name = 'Sponge'; url = 'https://repo.spongepowered.org/repository/maven-public/' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
+
+group = project.group
+version = project.version
+
+// JDK 8 没有 --release，用 source/target
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+minecraft {
+    mappings channel: 'official', version: minecraft_version
+}
+
+apply plugin: 'java'
+archivesBaseName = "${mod_id}-${version}-forge-${mc_range_label}"
+tasks.withType(Jar).configureEach {
+    archiveVersion = ''
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+}
+
+// 交给 mixingradle 生成 refmap（MCP 编译名 → SRG 运行名），并写进 mixin 配置
+mixin {
+    add sourceSets.main, "${mod_id}.refmap.json"
+    config "${mod_id}.mixins.json"
+}
+
+processResources {
+    // Gradle 过滤模板时默认用平台编码（Windows=GBK），会把模板里的中文读坏 ⇒ 显式 UTF-8
+    filteringCharset = 'UTF-8'
+    def props = [
+            version                   : project.version,
+            mod_id                    : mod_id,
+            mod_name                  : mod_name,
+            mod_author                : mod_author,
+            license                   : license,
+            credits                   : credits,
+            minecraft_version_range   : minecraft_version_range,
+            forge_loader_version_range: forge_loader_version_range
+    ]
+    inputs.properties(props)
+    filesMatching('META-INF/mods.toml') {
+        expand(props)
+    }
+}
+
+jar {
+    // 1.16.5 的 Forge 运行时用 SRG 名，必须 reobf；
+    // 少了这一行会产出 dev 包，症状是进游戏后 NoSuchMethodError（如 displayClientMessage）。
+    finalizedBy 'reobfJar'
+    manifest {
+        attributes([
+                'Specification-Title'   : mod_name,
+                'Specification-Vendor'  : mod_author,
+                'Specification-Version' : version,
+                'Implementation-Title'  : project.name,
+                'Implementation-Version': version,
+                'Implementation-Vendor' : mod_author,
+                'Built-On-Minecraft'    : minecraft_version,
+                'MixinConfigs'          : "${mod_id}.mixins.json"
+        ])
+    }
+}

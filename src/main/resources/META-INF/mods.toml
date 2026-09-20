@@ -1,0 +1,40 @@
+modLoader="javafml"
+loaderVersion="${forge_loader_version_range}"
+license="${license}"
+showAsResourcePack=false
+
+[[mods]]
+modId="${mod_id}"
+version="${version}"
+displayName="${mod_name}"
+# displayURL / issueTrackerURL / logoFile 必须写在 [[mods]] 子表内；写在顶层会被静默忽略
+displayURL="https://www.curseforge.com/minecraft/mc-mods/only-tp-violent-build"
+issueTrackerURL="https://github.com/Huziyang520/Only-TP-Violent-Build/issues"
+# 老版本 Forge 的 logoFile 一律用 jar 根裸文件名（含 "/" 有崩详情页的历史）
+logoFile="icon.png"
+authors="${mod_author}"
+credits="${credits}"
+description='''
+[EN] Restricts OP players to teleport-only commands on the server. Issues: https://github.com/Huziyang520/Only-TP-Violent-Build/issues | https://issue.mengcai.online/
+[CN] 限制服务端 OP 玩家只能使用传送（TP）相关指令。反馈：https://github.com/Huziyang520/Only-TP-Violent-Build/issues | https://issue.mengcai.online/
+'''
+
+# 注：Forge 侧的 Mixin 声明走 jar 清单里的 MixinConfigs（见 build.gradle），
+# mods.toml 里没有 [[mixins]] 段，那是 NeoForge 的写法。
+
+[[dependencies.${mod_id}]]
+modId="forge"
+type="required"
+# 覆盖 1.16~1.16.5（Forge 1.16.1=32.x / 1.16.3=34.x / 1.16.4=35.x / 1.16.5=36.x）
+versionRange="${forge_loader_version_range}"
+ordering="NONE"
+side="BOTH"
+mandatory=true
+
+[[dependencies.${mod_id}]]
+modId="minecraft"
+type="required"
+versionRange="${minecraft_version_range}"
+ordering="NONE"
+side="BOTH"
+mandatory=true

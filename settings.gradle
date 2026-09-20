@@ -1,0 +1,3 @@
+// 1.16.5 单模块 Forge 工程（老三条之一）
+// 注意：ForgeGradle 3.x 走 buildscript classpath 方式引入，不在这里写 plugins {}。
+rootProject.name = 'onlytpviolentbuild-1.16.x'
