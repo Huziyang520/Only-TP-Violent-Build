@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${version}",
+  "name": "${mod_name}",
+  "description": "[EN] Restricts OP players to teleport-only commands on the server. | [CN] 限制服务端 OP 玩家只能使用传送（TP）相关指令。",
+  "authors": [
+    "${mod_author}"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/only-tp-violent-build",
+    "issues": "https://github.com/Huziyang520/Only-TP-Violent-Build/issues",
+    "sources": "https://github.com/Huziyang520/Only-TP-Violent-Build"
+  },
+  "icon": "assets/onlytpviolentbuild/icon.png",
+  "license": "${license}",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.huziyang520.onlytpviolentbuild.OnlyTPViolentBuild"
+    ],
+    "client": [
+      "com.huziyang520.onlytpviolentbuild.client.OnlyTPViolentBuildClient"
+    ]
+  },
+  "mixins": [
+    "${mod_id}.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${fabric_loader_version}",
+    "fabric-api": "*",
+    "minecraft": ">=1.20.2 <1.20.5",
+    "java": ">=${java_version}"
+  }
+}
