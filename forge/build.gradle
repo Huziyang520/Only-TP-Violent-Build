@@ -1,0 +1,133 @@
+// 独立的 Forge 端工程（ForgeGradle 7）。
+// 为什么不挂在分支主工程里：主工程 Loom 1.17 / MDG 2.0.147 要求 Gradle 9.2+，
+// 而 FG6 明确拒绝 Gradle 9（"Versions Gradle 9.0 and newer are not supported yet"）；
+// 官方 MDK 在 1.21.11+ / 26.x 已改用 ForgeGradle 7（走 Gradle 9.5/9.7），
+// 因此 forge 端单独一个工程、单独一个 wrapper，互不干扰。
+plugins {
+    id 'java-library'
+    // 官方 26.x MDK 要求 [7.0.17,8)
+    id 'net.minecraftforge.gradle' version '[7.0.17,8)'
+}
+
+// 元数据唯一来源仍是分支的 gradle.properties
+def branch = new Properties()
+file('../gradle.properties').withInputStream { branch.load(it) }
+def mod_id = branch.getProperty('mod_id')
+def mod_name = branch.getProperty('mod_name')
+def mod_author = branch.getProperty('mod_author')
+def license = branch.getProperty('license')
+def credits = branch.getProperty('credits')
+def description = branch.getProperty('description')
+def mc = branch.getProperty('minecraft_version')
+def mcLabel = branch.getProperty('mc_range_label') ?: mc
+def mcRange = branch.getProperty('minecraft_version_range')
+def forgeVersion = branch.getProperty('forge_version')
+def forgeRange = branch.getProperty('forge_loader_version_range')
+def javaVersion = branch.getProperty('java_version').toInteger()
+
+group = branch.getProperty('group')
+version = branch.getProperty('version')
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(javaVersion)
+
+// 直接编译 common 源码与资源（不再经过 :common 工程 ⇒ 无 jvm.version 属性冲突）
+sourceSets.main.java.srcDirs = ['src/main/java', '../common/src/main/java']
+sourceSets.main.resources.srcDirs = ['src/main/resources', '../common/src/main/resources']
+
+minecraft {
+    mappings channel: 'official', version: mc
+}
+
+repositories {
+    minecraft.mavenizer(it)
+    maven fg.forgeMaven
+    maven fg.minecraftLibsMaven
+    maven { name = 'Aliyun Public'; url = 'https://maven.aliyun.com/repository/public' }
+    mavenCentral()
+    maven { name = 'Sponge'; url = 'https://repo.spongepowered.org/repository/maven-public' }
+}
+
+dependencies {
+    implementation minecraft.dependency("net.minecraftforge:forge:${mc}-${forgeVersion}")
+    // 不要挂 mixin 注解处理器：FG7 + official 映射下它会去找混淆映射并直接报
+    // "Unable to locate obfuscation mapping for @Inject target"，而官方映射运行期根本不需要 refmap。
+    compileOnly 'org.spongepowered:mixin:0.8.7'
+}
+
+base {
+    archivesName = "${mod_id}-${version}-forge-${mcLabel}"
+}
+tasks.withType(AbstractArchiveTask).configureEach {
+    archiveVersion = ''
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+// Forge 自带 Mixin 0.8.7（ASM 只解析到 Java 21 字节码），而 26.x 分支源码按 Java 25（major 69）编译。
+// 不能用 options.release=21 降级：那会把解析属性 org.gradle.jvm.version 拉到 21，
+// 与 Forge 26.3 构件声明的 JVM 25 冲突（"only compatible with JVM runtime version 25"）。
+// 因此保持 25 编译，编译完成后把 class 文件的 major 版本统一降为 65（Java 21），
+// mixins.json 的兼容级同步改写为 JAVA_21（见下）。
+tasks.named('compileJava', JavaCompile) {
+    doLast {
+        fileTree(destinationDirectory.get().asFile).matching { include '**/*.class' }.each { f ->
+            def bytes = f.getBytes()
+            if (bytes.length > 8 && bytes[6] == (byte) 0 && (bytes[7] & 0xFF) > 65) {
+                bytes[7] = (byte) 65
+                f.setBytes(bytes)
+            }
+        }
+    }
+}
+
+tasks.named('processResources') {
+    doLast {
+        def f = layout.buildDirectory.file('resources/main/onlytpviolentbuild.mixins.json').get().asFile
+        if (f.exists()) {
+            def t = f.getText('UTF-8')
+            def fixed = t.replaceAll('"compatibilityLevel":\\s*"JAVA_\\d+"', '"compatibilityLevel": "JAVA_21"')
+            if (fixed != t) {
+                f.setText(fixed, 'UTF-8')
+            }
+        }
+    }
+}
+
+jar {
+    from(file('../LICENSE')) {
+        rename { "${it}_${mod_name}" }
+    }
+    manifest {
+        attributes([
+                'Specification-Title'   : mod_name,
+                'Specification-Vendor'  : mod_author,
+                'Implementation-Title'  : 'forge',
+                'Implementation-Vendor' : mod_author,
+                'Built-On-Minecraft'    : mc,
+                'MixinConfigs'          : "${mod_id}.mixins.json"
+        ])
+    }
+}
+
+processResources {
+    var expandProps = [
+            'version'                    : version,
+            // 注意：键名不能叫 group —— Gradle 9 会把它当成任务自身的 group 属性并报 "Value not set"
+            'minecraft_version'          : mc,
+            'minecraft_version_range'    : mcRange,
+            'mod_name'                   : mod_name,
+            'mod_author'                 : mod_author,
+            'mod_id'                     : mod_id,
+            'license'                    : license,
+            'credits'                    : credits,
+            'description'                : description,
+            'forge_version'              : forgeVersion,
+            'forge_loader_version_range' : forgeRange
+    ]
+    filesMatching(['META-INF/mods.toml']) {
+        expand expandProps
+    }
+    inputs.properties(expandProps)
+}

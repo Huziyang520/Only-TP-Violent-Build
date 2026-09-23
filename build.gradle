@@ -3,4 +3,7 @@ plugins {
     id 'net.fabricmc.fabric-loom' version '1.17.21' apply false
     // see https://projects.neoforged.net/neoforged/moddevgradle for new versions
     id 'net.neoforged.moddev' version '2.0.147' apply false
+    // ForgeGradle 6（⚠ 探针：FG6 历史上仅支持 Gradle 8.x，本分支 wrapper = 9.6.1，
+    // 依赖 6.0.5x 对 Gradle 9 的适配；配置期失败则本分支 Forge 端被工具链阻塞）
+    id 'net.minecraftforge.gradle' version '[6.0.24,6.2)' apply false
 }

@@ -23,6 +23,28 @@ pluginManagement {
                 includeGroupAndSubgroups('net.fabricmc')
             }
         }
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'Forge'
+                    url = uri('https://maven.minecraftforge.net')
+                }
+            }
+            filter {
+                includeGroupAndSubgroups('net.minecraftforge')
+            }
+        }
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = 'Sponge'
+                    url = uri('https://repo.spongepowered.org/repository/maven-public')
+                }
+            }
+            filter {
+                includeGroupAndSubgroups('org.spongepowered')
+            }
+        }
     }
 }
 
@@ -36,3 +58,7 @@ includeBuild('build-logic')
 include('common')
 include('fabric')
 include('neoforge')
+// Forge 端暂不可用：ForgeGradle 6（≤6.0.54）硬性拒绝 Gradle 9.x（"Versions Gradle 9.0 and newer
+// are not supported yet"），而本分支 Loom 1.17 / MDG 2.0.147 要求 Gradle 9.2+ ⇒ 无交集。
+// forge/ 模块文件已备好（src + build.gradle），待 FG 支持 Gradle 9 或换 Architectury Loom 后再启用。
+// include('forge')
