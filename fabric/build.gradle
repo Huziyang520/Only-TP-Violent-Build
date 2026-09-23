@@ -1,0 +1,66 @@
+plugins {
+    id 'multiloader-loader'
+    id 'fabric-loom'
+}
+
+// 国内镜像仓库（作为后备源，优先于官方源失败时回退）
+repositories {
+    maven { name = 'BMCLAPI'; url = uri('https://bmclapi2.bangbang93.com/maven/') }
+    maven { name = 'Aliyun Public'; url = uri('https://maven.aliyun.com/repository/public') }
+}
+
+dependencies {
+    minecraft("com.mojang:minecraft:${minecraft_version}")
+    // Loom 1.14 之前不会给 mappings 配默认值，必须显式声明；
+    // 用官方 Mojang 映射，与 common 侧 ModDevGradle 的 neoForm 映射保持一致。
+    mappings(loom.officialMojangMappings())
+    // 该 MC 线的 Loom 不会自动重映射普通 implementation 的 mod 依赖，
+    // 必须用 modImplementation，否则 Fabric API 里引用的 intermediary 名（class_XXXX）
+    // 在官方映射下无法访问，报错形如"无法访问class_634"。
+    modImplementation("net.fabricmc:fabric-loader:${fabric_loader_version}")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${fabric_version}")
+    // 本模块会二次编译 common 的源码（见 multiloader-loader.gradle），
+    // 该 MC 线的 fabric-loader 不会把 Mixin 传递进编译类路径 ⇒ 显式补上，
+    // 否则 @Mixin/@Inject 全部报"程序包 org.spongepowered.asm.mixin 不存在"。
+    compileOnly("net.fabricmc:sponge-mixin:0.17.3+mixin.0.8.7")
+}
+
+loom {
+    def aw = project(':common').file("src/main/resources/${mod_id}.accesswidener")
+    if (aw.exists()) {
+        accessWidenerPath.set(aw)
+    }
+    runs {
+        client {
+            client()
+            setConfigName('Fabric Client')
+            ideConfigGenerated(true)
+            runDir('runs/client')
+        }
+        server {
+            server()
+            setConfigName('Fabric Server')
+            ideConfigGenerated(true)
+            runDir('runs/server')
+        }
+    }
+}
+
+// Implement mcgradleconventions loader attribute
+def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
+['apiElements', 'runtimeElements', 'sourcesElements', 'javadocElements', 'includeInternal', 'modCompileClasspath'].each { variant ->
+    configurations.matching { it.name == variant }.configureEach {
+        attributes {
+            attribute(loaderAttribute, 'fabric')
+        }
+    }
+}
+sourceSets.configureEach {
+    [it.compileClasspathConfigurationName, it.runtimeClasspathConfigurationName].each { variant->
+        configurations.named(variant) {
+            attributes {
+                attribute(loaderAttribute, 'fabric')
+            }
+        }
+    }
+}
