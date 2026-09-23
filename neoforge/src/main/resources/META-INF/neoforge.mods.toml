@@ -1,0 +1,45 @@
+# 本分支覆盖 26.1~26.2，按较低版 26.1.2 编译：
+# - modLoader / loaderVersion 在 26.3 起已降级为可选，但 26.1.2 线仍按旧写法保留，写了不影响 26.2。
+modLoader="javafml"
+loaderVersion="[4,)"
+license="${license}"
+showAsResourcePack=false
+
+[[mods]]
+modId="${mod_id}"
+version="${version}"
+displayName="${mod_name}"
+# displayURL / issueTrackerURL / 图标字段必须写在 [[mods]] 子表内；写在顶层会被
+# NeoForge 静默忽略，模组列表的"主页 / 问题"按钮点不动。
+displayURL="https://www.curseforge.com/minecraft/mc-mods/only-tp-violent-build"
+issueTrackerURL="https://github.com/Huziyang520/Only-TP-Violent-Build/issues"
+# 图标字段存在跨版本分界：26.1.2 只读 logoFile；26.2 起读 iconFile（logoFile 已废弃）。
+# 一个 jar 要同时覆盖两版 => 两个都写。26.1.2 用 logoFile 正常显示，26.2 用 iconFile 显示在
+# 左侧小图位（同时因存在 logoFile 会多一条废弃告警，功能不受影响）。
+logoFile="assets/onlytpviolentbuild/icon.png"
+iconFile="assets/onlytpviolentbuild/icon.png"
+authors="${mod_author}"
+credits="${credits}"
+description='''
+[EN] Restricts OP players to teleport-only commands on the server. Issues: https://github.com/Huziyang520/Only-TP-Violent-Build/issues | https://issue.mengcai.online/
+[CN] 限制服务端 OP 玩家只能使用传送（TP）相关指令。反馈：https://github.com/Huziyang520/Only-TP-Violent-Build/issues | https://issue.mengcai.online/
+'''
+
+# Mixin 必须显式声明，否则 common 里的共享 mixin 全部静默跳过
+[[mixins]]
+config="${mod_id}.mixins.json"
+
+[[dependencies.${mod_id}]]
+modId="neoforge"
+type="required"
+# 不用默认的 [26.1.2.7-beta,)：那会漏掉 26.1 / 26.1.1 的 NeoForge 构建
+versionRange="[26.1,26.3)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.${mod_id}]]
+modId="minecraft"
+type="required"
+versionRange="${minecraft_version_range}"
+ordering="NONE"
+side="BOTH"
