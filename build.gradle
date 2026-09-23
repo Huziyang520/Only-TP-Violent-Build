@@ -1,0 +1,9 @@
+plugins {
+    // Loom 1.13.x 只发布旧插件 id `fabric-loom`（见 settings.gradle 的 exclusiveContent）
+    // see https://maven.fabricmc.net/fabric-loom/fabric-loom.gradle.plugin/maven-metadata.xml for new versions
+    id 'fabric-loom' version '1.13.6' apply false
+    // see https://projects.neoforged.net/neoforged/moddevgradle for new versions
+    id 'net.neoforged.moddev' version '2.0.123' apply false
+    // ForgeGradle 6（仅支持 Gradle 8.x；本分支 wrapper = 8.14.3）
+    id 'net.minecraftforge.gradle' version '[6.0.24,6.2)' apply false
+}

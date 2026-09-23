@@ -1,0 +1,86 @@
+plugins {
+    id 'multiloader-loader'
+    id 'net.minecraftforge.gradle'
+    id 'org.spongepowered.mixin' version '0.7-SNAPSHOT'
+}
+
+// 归档名交给 build-logic 的 multiloader-common 统一处理
+// （<mod_id>-<version>-<loader>-<MC 区间>），此处不得再覆盖。
+// 本分支 build-logic 不带公共 repositories（各模块自带），forge 需要
+// Sponge 仓库解析 mixin 注解处理器（0.8.5-SNAPSHOT 只在 Sponge 快照库）。
+repositories {
+    maven { name = 'Sponge'; url = 'https://repo.spongepowered.org/repository/maven-public' }
+    maven { name = 'Aliyun Public'; url = 'https://maven.aliyun.com/repository/public' }
+}
+
+mixin {
+    config("${mod_id}.mixins.json")
+}
+
+minecraft {
+    mappings channel: 'official', version: minecraft_version
+
+    copyIdeResources = true // Calls processResources when in dev
+
+    // 1.21.3~1.21.5 Forge 运行期使用官方映射，不做 official→SRG 的 reobf
+    // （与 1.21-1.21.1 分支同口径；1.20.2~1.20.4 才需要 reobf = true）。
+    reobf = false
+
+    // Automatically enable Forge AccessTransformers if the file exists
+    def at = file('src/main/resources/META-INF/accesstransformer.cfg')
+    if (at.exists()) {
+        accessTransformer = at
+    }
+
+    runs {
+        client {
+            workingDirectory project.file('runs/client')
+            property 'forge.enabledGameTestNamespaces', mod_id
+            mods {
+                modClientRun {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('runs/server')
+            property 'forge.enabledGameTestNamespaces', mod_id
+            args '--nogui'
+            mods {
+                modServerRun {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('runs/data')
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            mods {
+                modDataRun {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+sourceSets.main.resources.srcDir 'src/generated/resources'
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
+
+    // Forge's hack fix
+    implementation('net.sf.jopt-simple:jopt-simple:5.0.4') { version { strictly '5.0.4' } }
+}
+
+jar {
+    manifest.attributes([
+            "MixinConfigs": "${mod_id}.mixins.json"
+    ])
+}
+
+// 注意：Forge 1.21.3+ 自带 Mixin 0.8.7，正常识别 JAVA_21 兼容级，
+// common 的 mixins.json（JAVA_21）无需改写，forge 模块也不需要降字节码。
