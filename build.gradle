@@ -1,0 +1,8 @@
+plugins {
+    // Loom 1.13.x 只发布旧插件 id `fabric-loom`（见 settings.gradle 的 exclusiveContent）
+    // see https://maven.fabricmc.net/fabric-loom/fabric-loom.gradle.plugin/maven-metadata.xml for new versions
+    id 'fabric-loom' version '1.13.6' apply false
+    // see https://projects.neoforged.net/neoforged/moddevgradle for new versions
+    id 'net.neoforged.moddev' version '2.0.123' apply false
+    // Forge 端已改为独立工程（forge/），不再在分支主工程里应用 ForgeGradle。
+}

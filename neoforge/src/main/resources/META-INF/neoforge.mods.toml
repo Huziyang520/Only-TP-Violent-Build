@@ -1,0 +1,41 @@
+# 本分支覆盖 1.21.9~1.21.11（Java 21）。该线仍是旧版模组列表：只有一个右侧图位，用 logoFile；
+# iconFile / bannerFile 是 26.2 起才有的双图位，此版本写 iconFile 不生效。
+modLoader="javafml"
+loaderVersion="[4,)"
+license="${license}"
+showAsResourcePack=false
+
+[[mods]]
+modId="${mod_id}"
+version="${version}"
+displayName="${mod_name}"
+# displayURL / issueTrackerURL / 图标字段必须写在 [[mods]] 子表内；写在顶层会被
+# NeoForge 静默忽略，模组列表的"主页 / 问题"按钮点不动。
+displayURL="https://www.curseforge.com/minecraft/mc-mods/only-tp-violent-build"
+issueTrackerURL="https://github.com/Huziyang520/Only-TP-Violent-Build/issues"
+logoFile="assets/onlytpviolentbuild/icon.png"
+authors="${mod_author}"
+credits="${credits}"
+description='''
+[EN] Restricts OP players to teleport-only commands on the server. Issues: https://github.com/Huziyang520/Only-TP-Violent-Build/issues | https://issue.mengcai.online/
+[CN] 限制服务端 OP 玩家只能使用传送（TP）相关指令。反馈：https://github.com/Huziyang520/Only-TP-Violent-Build/issues | https://issue.mengcai.online/
+'''
+
+# Mixin 必须显式声明，否则 common 里的共享 mixin 全部静默跳过
+[[mixins]]
+config="${mod_id}.mixins.json"
+
+[[dependencies.${mod_id}]]
+modId="neoforge"
+type="required"
+# 覆盖 1.21.9~1.21.11，取该线起点 21.9 作下界（该线 NeoForge 仅有 beta 构建）
+versionRange="[21.9,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.${mod_id}]]
+modId="minecraft"
+type="required"
+versionRange="${minecraft_version_range}"
+ordering="NONE"
+side="BOTH"
